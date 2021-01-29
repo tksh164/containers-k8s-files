@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lbsvc-dep
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      target: lbsvc
+  template:
+    metadata:
+      name: lbsvc-pod
+      labels:
+        target: lbsvc
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:stable-alpine
+        ports:
+        - containerPort: 80
+          protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: lbsvc-svc
+spec:
+  type: LoadBalancer
+  selector:
+    target: lbsvc
+  ports:
+  - port: 80

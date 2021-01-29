@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: clusipsvc-dep
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      target: clusipsvc
+  template:
+    metadata:
+      name: clusipsvc-pod
+      labels:
+        target: clusipsvc
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:stable-alpine
+        ports:
+        - containerPort: 80
+          protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: clusipsvc-svc
+spec:
+  type: ClusterIP
+  selector:
+    target: clusipsvc
+  ports:
+  - port: 80
